@@ -70,7 +70,7 @@ func main() {
 	}
 
 	// Sauvegarder l'image floutée sur le disque
-	outFile, err := os.Create("output.jpg")
+	outFile, err := os.Create("output.png")
 	if err != nil {
 		log.Fatalf("Erreur lors de la création du fichier de sortie: %v", err)
 	}
@@ -81,7 +81,7 @@ func main() {
 		log.Fatalf("Erreur lors de l'encodage de l'image de sortie: %v", err)
 	}
 
-	fmt.Println("Image floutée sauvegardée sous 'output.jpg'")
+	fmt.Println("Image floutée sauvegardée sous 'output.png'")
 }
 
 // Fonction pour envoyer l'image au serveur
