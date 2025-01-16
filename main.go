@@ -39,8 +39,20 @@ func main() {
 		log.Fatalf("Erreur lors du passage en int de l'argument%v", err)
 	}
 
-	// Envoyer l'image au serveur
+	RadiusStr := os.Args[2]
+	Radius, err := strconv.Atoi(RadiusStr)
+	if err != nil {
+		log.Fatalf("Erreur lors du passage en int de l'argument%v", err)
+	}
+
+	// Envoyer le nombre de go routine
 	err = sendGoRoutineNumber(conn, goRoutineNumber)
+	if err != nil {
+		log.Fatalf("Erreur lors de l'envoi de l'image: %v", err)
+	}
+
+	// Envoyer le rayon
+	err = sendRadius(conn, Radius)
 	if err != nil {
 		log.Fatalf("Erreur lors de l'envoi de l'image: %v", err)
 	}
@@ -87,6 +99,12 @@ func sendImage(conn net.Conn, img image.Image) error {
 
 // Fonction pour envoyer le nombre de GoRoutine
 func sendGoRoutineNumber(conn net.Conn, val int) error {
+	err := binary.Write(conn, binary.BigEndian, int32(val)) // Utiliser int32 pour garantir la taille de l'entier
+	return err
+}
+
+// Fonction pour envoyer le rayon
+func sendRadius(conn net.Conn, val int) error {
 	err := binary.Write(conn, binary.BigEndian, int32(val)) // Utiliser int32 pour garantir la taille de l'entier
 	return err
 }
