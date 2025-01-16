@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image"
-	"image/jpeg"
+	"image/png"
 	"log"
 	"net"
 	"os"
@@ -14,7 +14,7 @@ import (
 
 func main() {
 	// Ouvrir l'image d'entrée
-	file, err := os.Open("input.jpg") // Remplacez par le chemin de votre image
+	file, err := os.Open("input.png") // Remplacez par le chemin de votre image
 	if err != nil {
 		log.Fatalf("Erreur lors de l'ouverture de l'image: %v", err)
 	}
@@ -64,7 +64,7 @@ func main() {
 	}
 	defer outFile.Close()
 
-	err = jpeg.Encode(outFile, blurredImg, nil)
+	err = png.Encode(outFile, blurredImg)
 	if err != nil {
 		log.Fatalf("Erreur lors de l'encodage de l'image de sortie: %v", err)
 	}
@@ -75,7 +75,7 @@ func main() {
 // Fonction pour envoyer l'image au serveur
 func sendImage(conn net.Conn, img image.Image) error {
 	var buf bytes.Buffer
-	err := jpeg.Encode(&buf, img, nil)
+	err := png.Encode(&buf, img)
 	if err != nil {
 		return err
 	}
