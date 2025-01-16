@@ -2,12 +2,14 @@ package main
 
 import (
 	"bytes"
+	"encoding/binary"
 	"fmt"
 	"image"
 	"image/jpeg"
 	"log"
 	"net"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -30,6 +32,18 @@ func main() {
 		log.Fatalf("Erreur de connexion au serveur: %v", err)
 	}
 	defer conn.Close()
+
+	goRoutineNumberStr := os.Args[1]
+	goRoutineNumber, err := strconv.Atoi(goRoutineNumberStr)
+	if err != nil {
+		log.Fatalf("Erreur lors du passage en int de l'argument%v", err)
+	}
+
+	// Envoyer l'image au serveur
+	err = sendGoRoutineNumber(conn, goRoutineNumber)
+	if err != nil {
+		log.Fatalf("Erreur lors de l'envoi de l'image: %v", err)
+	}
 
 	// Envoyer l'image au serveur
 	err = sendImage(conn, img)
@@ -68,6 +82,12 @@ func sendImage(conn net.Conn, img image.Image) error {
 
 	// Envoyer l'image via la connexion
 	_, err = conn.Write(buf.Bytes())
+	return err
+}
+
+// Fonction pour envoyer le nombre de GoRoutine
+func sendGoRoutineNumber(conn net.Conn, val int) error {
+	err := binary.Write(conn, binary.BigEndian, int32(val)) // Utiliser int32 pour garantir la taille de l'entier
 	return err
 }
 
